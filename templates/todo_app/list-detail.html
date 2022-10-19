@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h3> ToDo List</h3>
+    <h5> {{ title }}</h5>
+
+    <ul>
+    {% for todo_item in todo_list %}
+        <li> {{ todo_item.title }}</li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}

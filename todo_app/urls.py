@@ -1,6 +1,9 @@
 from django.urls import path
 from django.views.generic import TemplateView
 
+from todo_app.views import ListListView, ItemListView
+
 urlpatterns = [
-    path('', TemplateView.as_view(template_name="todo_app/index.html"), name="index"),
+    path('', ListListView.as_view(), name="list-view"),
+    path("list/<int:list_id>/", ItemListView.as_view(), name="item-view"),
 ]
