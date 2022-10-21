@@ -1,7 +1,8 @@
 # Create your views here.
-from django.urls import reverse
-from django.views.generic import ListView, DeleteView, FormView
+from django.urls import reverse, reverse_lazy
+from django.views.generic import ListView, DeleteView, FormView, CreateView, UpdateView
 
+from todo_app.forms import ListForm, ItemForm
 from todo_app.models import ToDoList, ToDoItem
 
 
@@ -22,6 +23,7 @@ class ItemListView(ListView):
     def get_context_data(self):
         context = super(ItemListView, self).get_context_data()
         context["todo_list"] = ToDoItem.objects.filter(todo_list_id=self.kwargs["list_id"])
+        context["todo_list_id"] = self.kwargs["list_id"]
         context["title"] = ToDoList.objects.get(id=self.kwargs["list_id"]).title
         return context
 
@@ -31,11 +33,35 @@ class DeleteListView(DeleteView):
 class DeleteItemView(DeleteView):
     pass
 
-class AddListView(FormView):
-    pass
+class ListAddView(CreateView):
+    form_class = ListForm
+    template_name = "todo_app/add_list.html"
+    success_url = reverse_lazy("list-view")
 
-class AddItemView(FormView):
-    pass
+class ItemAddView(CreateView):
+    form_class = ItemForm
+    template_name = "todo_app/add_item.html"
 
-class UpdateItemView(FormView):
-    pass
+    def get_context_data(self):
+        context = super(ItemAddView, self).get_context_data()
+        context["title"] = ToDoList.objects.get(id=self.kwargs["list_id"]).title
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy("item-view", args=[self.kwargs["list_id"]])
+
+class ItemUpdateView(UpdateView):
+    form_class = ItemForm
+    template_name = "todo_app/update_item.html"
+
+    def get_context_data(self):
+        context = super(ItemUpdateView, self).get_context_data()
+        context["title"] = ToDoList.objects.get(id=self.kwargs["list_id"]).title
+        context["task_title"] = ToDoItem.objects.get(id=self.kwargs["pk"]).title
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy("item-view", args=[self.kwargs["list_id"]])
+
+    def get_queryset(self):
+        return ToDoItem.objects.all()

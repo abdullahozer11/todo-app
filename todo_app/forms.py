@@ -1,0 +1,15 @@
+from django.forms import ModelForm
+
+from todo_app.models import ToDoList, ToDoItem
+
+
+class ListForm(ModelForm):
+    class Meta:
+        model = ToDoList
+        fields = ['title']
+
+class ItemForm(ModelForm):
+    class Meta:
+        model = ToDoItem
+        fields = '__all__'
+

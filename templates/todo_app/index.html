@@ -8,5 +8,6 @@
         <li onclick="location.href='{% url 'item-view' list_id=todo_list.id %}'"> {{ todo_list.title }}</li>
     {% endfor %}
     </ul>
-
+    <input type="button" value="Add new list" class="text"
+    onclick="location.href='{% url "list-add" %}'">
 {% endblock %}

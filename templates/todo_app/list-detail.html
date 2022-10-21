@@ -7,8 +7,8 @@
 
     <ul>
     {% for todo_item in todo_list %}
-        <li> {{ todo_item.title }}</li>
+        <li onclick="location.href='{% url "item-update" list_id=todo_list_id pk=todo_item.id %}'"> {{ todo_item.title }}</li>
     {% endfor %}
     </ul>
-
+    <input type="button" value="Add new task" class="text" onclick="location.href='{% url "item-add" list_id=todo_list_id %}'">
 {% endblock %}
