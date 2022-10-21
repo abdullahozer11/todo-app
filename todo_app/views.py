@@ -45,6 +45,11 @@ class ItemAddView(CreateView):
     def get_success_url(self):
         return reverse_lazy("item-view", args=[self.kwargs["list_id"]])
 
+    def get_initial(self):
+        initial = super(ItemAddView, self).get_initial()
+        initial["todo_list"] = ToDoList.objects.get(pk=self.kwargs["list_id"])
+        return initial
+
 
 class ItemUpdateView(UpdateView):
     form_class = ItemForm
