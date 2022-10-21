@@ -1,11 +1,14 @@
 from django.urls import path
 
-from todo_app.views import ListListView, ItemListView, ListAddView, ItemAddView, ItemUpdateView
+from todo_app.views import ListListView, ItemListView, ListAddView, ItemAddView, ItemUpdateView, ListDeleteView, \
+    ItemDeleteView
 
 urlpatterns = [
     path('', ListListView.as_view(), name="list-view"),
     path('list/<int:list_id>/', ItemListView.as_view(), name="item-view"),
     path('list/add/', ListAddView.as_view(), name="list-add"),
+    path('list/<pk>/delete/', ListDeleteView.as_view(), name="list-delete"),
     path('list/<int:list_id>/item/add/', ItemAddView.as_view(), name="item-add"),
     path('list/<int:list_id>/item/<pk>/update/', ItemUpdateView.as_view(), name="item-update"),
+    path('list/<int:list_id>/item/<pk>/delete/', ItemDeleteView.as_view(), name="item-delete"),
 ]

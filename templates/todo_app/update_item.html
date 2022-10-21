@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h3> {{ title }} </h3>
-<h4> Update task "{{ task_title }}"</h4>
+<h3> {{ task.todo_list.title }} </h3>
+<h4> Update task "{{ task.title }}"</h4>
 
 <form method="post">
 {% csrf_token %}
@@ -11,5 +11,6 @@
     </table>
     <button type="submit"> Save </button>
 </form>
+<input type="button" value="Delete" onclick="location.href='{% url "item-delete" list_id=task.todo_list.id pk=task.id %}'">
 
 {% endblock %}

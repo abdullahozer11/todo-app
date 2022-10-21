@@ -16,27 +16,22 @@ class ListListView(ListView):
         context["todo_lists"] = ToDoList.objects.all()
         return context
 
+
 class ItemListView(ListView):
-    model = ToDoItem
+    model = ToDoList
     template_name = "todo_app/list-detail.html"
 
     def get_context_data(self):
         context = super(ItemListView, self).get_context_data()
-        context["todo_list"] = ToDoItem.objects.filter(todo_list_id=self.kwargs["list_id"])
-        context["todo_list_id"] = self.kwargs["list_id"]
-        context["title"] = ToDoList.objects.get(id=self.kwargs["list_id"]).title
+        context["todo_list"] = ToDoList.objects.get(pk=self.kwargs["list_id"])
+        context["todo_items"] = ToDoItem.objects.filter(todo_list_id=self.kwargs["list_id"])
         return context
-
-class DeleteListView(DeleteView):
-    pass
-
-class DeleteItemView(DeleteView):
-    pass
 
 class ListAddView(CreateView):
     form_class = ListForm
     template_name = "todo_app/add_list.html"
     success_url = reverse_lazy("list-view")
+
 
 class ItemAddView(CreateView):
     form_class = ItemForm
@@ -50,14 +45,14 @@ class ItemAddView(CreateView):
     def get_success_url(self):
         return reverse_lazy("item-view", args=[self.kwargs["list_id"]])
 
+
 class ItemUpdateView(UpdateView):
     form_class = ItemForm
     template_name = "todo_app/update_item.html"
 
     def get_context_data(self):
         context = super(ItemUpdateView, self).get_context_data()
-        context["title"] = ToDoList.objects.get(id=self.kwargs["list_id"]).title
-        context["task_title"] = ToDoItem.objects.get(id=self.kwargs["pk"]).title
+        context["task"] = ToDoItem.objects.get(id=self.kwargs["pk"])
         return context
 
     def get_success_url(self):
@@ -65,3 +60,28 @@ class ItemUpdateView(UpdateView):
 
     def get_queryset(self):
         return ToDoItem.objects.all()
+
+
+class ListDeleteView(DeleteView):
+    model = ToDoList
+    template_name = "todo_app/list-delete.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(ListDeleteView, self).get_context_data(**kwargs)
+        context["todo_list"] = self.object
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy("list-view")
+
+class ItemDeleteView(DeleteView):
+    model = ToDoItem
+    template_name = "todo_app/item-delete.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(ItemDeleteView, self).get_context_data(**kwargs)
+        context["task"] = self.object
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy("item-view", args=[self.kwargs["list_id"]])
