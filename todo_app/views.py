@@ -29,13 +29,13 @@ class ItemListView(ListView):
 
 class ListAddView(CreateView):
     form_class = ListForm
-    template_name = "todo_app/add_list.html"
+    template_name = "todo_app/list-add.html"
     success_url = reverse_lazy("list-view")
 
 
 class ItemAddView(CreateView):
     form_class = ItemForm
-    template_name = "todo_app/add_item.html"
+    template_name = "todo_app/item-add.html"
 
     def get_context_data(self):
         context = super(ItemAddView, self).get_context_data()
@@ -53,7 +53,7 @@ class ItemAddView(CreateView):
 
 class ItemUpdateView(UpdateView):
     form_class = ItemForm
-    template_name = "todo_app/update_item.html"
+    template_name = "todo_app/item-update.html"
 
     def get_context_data(self):
         context = super(ItemUpdateView, self).get_context_data()
