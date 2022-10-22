@@ -1,6 +1,6 @@
 # Create your views here.
-from django.urls import reverse, reverse_lazy
-from django.views.generic import ListView, DeleteView, FormView, CreateView, UpdateView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DeleteView, CreateView, UpdateView
 
 from todo_app.forms import ListForm, ItemForm
 from todo_app.models import ToDoList, ToDoItem
