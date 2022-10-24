@@ -12,4 +12,3 @@ class ItemForm(ModelForm):
     class Meta:
         model = ToDoItem
         fields = '__all__'
-

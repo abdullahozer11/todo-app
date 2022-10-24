@@ -1,10 +1,11 @@
 # Create your views here.
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DeleteView, CreateView, UpdateView
 
 from todo_app.forms import ListForm, ItemForm
 from todo_app.models import ToDoList, ToDoItem
-
 
 class ListListView(ListView):
     model = ToDoList
@@ -26,6 +27,7 @@ class ItemListView(ListView):
         context["todo_list"] = ToDoList.objects.get(pk=self.kwargs["list_id"])
         context["todo_items"] = ToDoItem.objects.filter(todo_list_id=self.kwargs["list_id"])
         return context
+
 
 class ListAddView(CreateView):
     form_class = ListForm
@@ -79,6 +81,7 @@ class ListDeleteView(DeleteView):
     def get_success_url(self):
         return reverse_lazy("list-view")
 
+
 class ItemDeleteView(DeleteView):
     model = ToDoItem
     template_name = "todo_app/item-delete.html"
@@ -90,3 +93,13 @@ class ItemDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse_lazy("item-view", args=[self.kwargs["list_id"]])
+
+
+class LoginPageView(LoginView):
+    next_page = 'index'
+
+
+class SignUpView(CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy("login")
+    template_name = "registration/signup.html"
