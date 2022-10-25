@@ -2,10 +2,11 @@ from django.contrib.auth.views import LoginView
 from django.urls import path
 
 from todo_app.views import ListListView, ItemListView, ListAddView, ItemAddView, ItemUpdateView, ListDeleteView, \
-    ItemDeleteView, SignUpView
+    ItemDeleteView, SignUpView, AboutView
 
 urlpatterns = [
-    path('', ListListView.as_view(), name="list-view"),
+    path('', ListListView.as_view(), name="index"),
+    path('about', AboutView, name="about"),
     path('list/<int:list_id>/', ItemListView.as_view(), name="item-view"),
     path('list/add/', ListAddView.as_view(), name="list-add"),
     path('list/<pk>/delete/', ListDeleteView.as_view(), name="list-delete"),

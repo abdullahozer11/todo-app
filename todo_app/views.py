@@ -1,6 +1,7 @@
 # Create your views here.
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LoginView
+from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DeleteView, CreateView, UpdateView
 
@@ -32,7 +33,7 @@ class ItemListView(ListView):
 class ListAddView(CreateView):
     form_class = ListForm
     template_name = "todo_app/list-add.html"
-    success_url = reverse_lazy("list-view")
+    success_url = reverse_lazy("index")
 
 
 class ItemAddView(CreateView):
@@ -79,7 +80,7 @@ class ListDeleteView(DeleteView):
         return context
 
     def get_success_url(self):
-        return reverse_lazy("list-view")
+        return reverse_lazy("index")
 
 
 class ItemDeleteView(DeleteView):
@@ -106,3 +107,6 @@ class SignUpView(CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy("login")
     template_name = "registration/signup.html"
+
+def AboutView(request):
+    return render(request, template_name="about.html")
