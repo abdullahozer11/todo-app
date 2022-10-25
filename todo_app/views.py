@@ -1,7 +1,7 @@
 # Create your views here.
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LoginView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DeleteView, CreateView, UpdateView
 
 from todo_app.forms import ListForm, ItemForm
@@ -97,6 +97,9 @@ class ItemDeleteView(DeleteView):
 
 class LoginPageView(LoginView):
     next_page = 'index'
+
+    def get_success_url(self):
+        return reverse('index')
 
 
 class SignUpView(CreateView):
