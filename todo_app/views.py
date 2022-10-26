@@ -1,6 +1,9 @@
 # Create your views here.
+from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DeleteView, CreateView, UpdateView
@@ -8,15 +11,15 @@ from django.views.generic import ListView, DeleteView, CreateView, UpdateView
 from todo_app.forms import ListForm, ItemForm
 from todo_app.models import ToDoList, ToDoItem
 
-class ListListView(ListView):
+
+class IndexView(LoginRequiredMixin, ListView):
     model = ToDoList
     context_object_name = 'List all the todo lists'
     template_name = "todo_app/index.html"
+    login_url = "login"
 
-    def get_context_data(self):
-        context = super(ListListView, self).get_context_data()
-        context["todo_lists"] = ToDoList.objects.all()
-        return context
+    def get_queryset(self):
+        return ToDoList.objects.filter(user=self.request.user)
 
 
 class ItemListView(ListView):
@@ -34,6 +37,10 @@ class ListAddView(CreateView):
     form_class = ListForm
     template_name = "todo_app/list-add.html"
     success_url = reverse_lazy("index")
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
 
 class ItemAddView(CreateView):
@@ -99,10 +106,6 @@ class ItemDeleteView(DeleteView):
 class LoginPageView(LoginView):
     next_page = 'index'
 
-    def get_success_url(self):
-        return reverse('index')
-
-
 class SignUpView(CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy("login")
@@ -110,3 +113,10 @@ class SignUpView(CreateView):
 
 def AboutView(request):
     return render(request, template_name="about.html")
+
+def ProfileView(request):
+    return render(request, template_name="profiles/profile.html")
+
+def LogoutView(request):
+    logout(request)
+    return HttpResponseRedirect(reverse("index"))
