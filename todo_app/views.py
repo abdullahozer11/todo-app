@@ -6,7 +6,7 @@ from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, DeleteView, CreateView, UpdateView
+from django.views.generic import ListView, DeleteView, CreateView, UpdateView, TemplateView, DetailView
 
 from todo_app.forms import ListForm, ItemForm
 from todo_app.models import ToDoList, ToDoItem, Profile
@@ -14,7 +14,6 @@ from todo_app.models import ToDoList, ToDoItem, Profile
 
 class IndexView(LoginRequiredMixin, ListView):
     model = ToDoList
-    context_object_name = 'List all the todo lists'
     template_name = "todo_app/index.html"
     login_url = "login"
 
@@ -115,10 +114,11 @@ class SignUpView(CreateView):
 def AboutView(request):
     return render(request, template_name="about.html")
 
-class ProfileView(ListView):
+class ProfileView(LoginRequiredMixin, DetailView):
     model = Profile
     template_name = "profiles/profile.html"
 
-def LogoutView(request):
-    logout(request)
-    return HttpResponseRedirect(reverse("index"))
+class LogoutView(LoginRequiredMixin, TemplateView):
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return HttpResponseRedirect(reverse("index"))

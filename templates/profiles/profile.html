@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-    <h2>This is my profile page</h2>
-
+    <h2>{{object.user.username}}</h2>
+    <img src="{{ object.avatar.url }}" alt="My avatar">
+    <p>{{object.bio}}</p>
 {% endblock %}

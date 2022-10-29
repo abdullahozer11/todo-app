@@ -28,7 +28,7 @@ class ToDoItem(models.Model):
         ordering = ["due_date"]
 
 class Profile(models.Model):
-    user = models.ForeignKey(User, on_delete=CASCADE, default=None)
+    user = models.OneToOneField(User, on_delete=CASCADE)
     avatar = models.ImageField(default="default.jpg", upload_to="profile_photos")
     bio = models.TextField()
 
