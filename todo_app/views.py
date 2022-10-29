@@ -114,8 +114,9 @@ class SignUpView(CreateView):
 def AboutView(request):
     return render(request, template_name="about.html")
 
-def ProfileView(request):
-    return render(request, template_name="profiles/profile.html")
+class ProfileView(ListView):
+    model = Profile
+    template_name = "profiles/profile.html"
 
 def LogoutView(request):
     logout(request)

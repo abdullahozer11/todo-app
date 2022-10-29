@@ -26,3 +26,11 @@ class ToDoItem(models.Model):
 
     class Meta:
         ordering = ["due_date"]
+
+class Profile(models.Model):
+    user = models.ForeignKey(User, on_delete=CASCADE, default=None)
+    avatar = models.ImageField(default="default.jpg", upload_to="profile_photos")
+    bio = models.TextField()
+
+    def __str__(self):
+        return self.user.username
