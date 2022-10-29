@@ -7,7 +7,7 @@ from todo_app.views import IndexView, ItemListView, ListAddView, ItemAddView, It
 urlpatterns = [
     path('', IndexView.as_view(), name="index"),
     path('about', AboutView, name="about"),
-    path('list/<int:list_id>/', ItemListView.as_view(), name="item-view"),
+    path('list/<pk>/', ItemListView.as_view(), name="item-view"),
     path('list/add/', ListAddView.as_view(), name="list-add"),
     path('list/<pk>/delete/', ListDeleteView.as_view(), name="list-delete"),
     path('list/<int:list_id>/item/add/', ItemAddView.as_view(), name="item-add"),

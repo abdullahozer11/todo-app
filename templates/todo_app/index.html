@@ -2,10 +2,9 @@
 
 {% block content %}
     <h3> ToDo Lists </h3>
-
     <ul>
     {% for todo_list in object_list %}
-        <li onclick="location.href='{% url 'item-view' list_id=todo_list.id %}'"> {{ todo_list.title }}</li>
+        <li onclick="location.href='{% url 'item-view' todo_list.id %}'"> {{ todo_list.title }}</li>
     {% endfor %}
     </ul>
     <input type="button" value="Add new list" class="text"

@@ -9,7 +9,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DeleteView, CreateView, UpdateView
 
 from todo_app.forms import ListForm, ItemForm
-from todo_app.models import ToDoList, ToDoItem
+from todo_app.models import ToDoList, ToDoItem, Profile
 
 
 class IndexView(LoginRequiredMixin, ListView):
@@ -23,15 +23,16 @@ class IndexView(LoginRequiredMixin, ListView):
 
 
 class ItemListView(ListView):
-    model = ToDoList
+    model = ToDoItem
     template_name = "todo_app/list-detail.html"
+
+    def get_queryset(self):
+        return ToDoItem.objects.filter(todo_list_id=self.kwargs["pk"])
 
     def get_context_data(self):
         context = super(ItemListView, self).get_context_data()
-        context["todo_list"] = ToDoList.objects.get(pk=self.kwargs["list_id"])
-        context["todo_items"] = ToDoItem.objects.filter(todo_list_id=self.kwargs["list_id"])
+        context["todo_list"] = ToDoList.objects.get(id=self.kwargs["pk"])
         return context
-
 
 class ListAddView(CreateView):
     form_class = ListForm
