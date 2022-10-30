@@ -1,7 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>{{object.user.username}}</h2>
-    <img src="{{ object.avatar.url }}" alt="My avatar">
-    <p>{{object.bio}}</p>
+    <div class="card">
+        <h2>{{ object.user.username }}</h2>
+        <img src="{{ object.avatar.url }}"
+             alt="My avatar"
+             width="200"
+             height="200">
+        <p>{{ object.bio }}</p>
+    </div>
 {% endblock %}
+
+
