@@ -11,4 +11,4 @@ class ListForm(ModelForm):
 class ItemForm(ModelForm):
     class Meta:
         model = ToDoItem
-        fields = '__all__'
+        exclude = ['todo_list']
