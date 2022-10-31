@@ -2,6 +2,7 @@
 from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -129,7 +130,8 @@ class ProfileView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ProfileView, self).get_context_data(**kwargs)
-        context["profile"] = Profile.objects.get(user=self.request.user)
+        user = User.objects.get(username=kwargs['username'])
+        context["profile"] = Profile.objects.get(user=user)
         return context
 
 class LogoutView(LoginRequiredMixin, TemplateView):
