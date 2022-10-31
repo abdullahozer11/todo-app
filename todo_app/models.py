@@ -28,9 +28,9 @@ class ToDoItem(models.Model):
         ordering = ["due_date"]
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=CASCADE)
+    user = models.OneToOneField(User, on_delete=CASCADE, blank=True, null=True)
     avatar = models.ImageField(default="default.jpg", upload_to="profile_photos")
-    bio = models.TextField()
+    bio = models.TextField(default="", blank=True, null=True)
 
     def __str__(self):
         return self.user.username

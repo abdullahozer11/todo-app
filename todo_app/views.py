@@ -1,12 +1,12 @@
 # Create your views here.
 from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, DeleteView, CreateView, UpdateView, TemplateView, DetailView
+from django.views.generic import ListView, DeleteView, CreateView, UpdateView, TemplateView
 
 from todo_app.forms import ListForm, ItemForm
 from todo_app.models import ToDoList, ToDoItem, Profile
@@ -21,7 +21,7 @@ class IndexView(LoginRequiredMixin, ListView):
         return ToDoList.objects.filter(user=self.request.user)
 
 
-class ItemListView(ListView):
+class ItemListView(LoginRequiredMixin, ListView):
     model = ToDoItem
     template_name = "todo_app/list-detail.html"
 
@@ -33,7 +33,7 @@ class ItemListView(ListView):
         context["todo_list"] = ToDoList.objects.get(id=self.kwargs["pk"])
         return context
 
-class ListAddView(CreateView):
+class ListAddView(LoginRequiredMixin, CreateView):
     form_class = ListForm
     template_name = "todo_app/list-add.html"
     success_url = reverse_lazy("index")
@@ -43,7 +43,7 @@ class ListAddView(CreateView):
         return super().form_valid(form)
 
 
-class ItemAddView(CreateView):
+class ItemAddView(LoginRequiredMixin, CreateView):
     form_class = ItemForm
     template_name = "todo_app/item-add.html"
 
@@ -61,7 +61,7 @@ class ItemAddView(CreateView):
         return initial
 
 
-class ItemUpdateView(UpdateView):
+class ItemUpdateView(LoginRequiredMixin, UpdateView):
     form_class = ItemForm
     template_name = "todo_app/item-update.html"
 
@@ -77,7 +77,7 @@ class ItemUpdateView(UpdateView):
         return ToDoItem.objects.all()
 
 
-class ListDeleteView(DeleteView):
+class ListDeleteView(LoginRequiredMixin, DeleteView):
     model = ToDoList
     template_name = "todo_app/list-delete.html"
 
@@ -90,7 +90,7 @@ class ListDeleteView(DeleteView):
         return reverse_lazy("index")
 
 
-class ItemDeleteView(DeleteView):
+class ItemDeleteView(LoginRequiredMixin, DeleteView):
     model = ToDoItem
     template_name = "todo_app/item-delete.html"
 
@@ -103,20 +103,34 @@ class ItemDeleteView(DeleteView):
         return reverse_lazy("item-view", args=[self.kwargs["list_id"]])
 
 
-class LoginPageView(LoginView):
+class NotLoggedAllow(UserPassesTestMixin):
+    login_url = '/login/'
+
+    def test_func(self):
+        return not self.request.user.is_authenticated
+
+
+class LoginPageView(NotLoggedAllow, LoginView):
     next_page = 'index'
 
-class SignUpView(CreateView):
+
+class SignUpView(NotLoggedAllow, CreateView):
     form_class = UserCreationForm
-    success_url = reverse_lazy("login")
+    success_url = reverse_lazy("index")
     template_name = "registration/signup.html"
 
 def AboutView(request):
     return render(request, template_name="about.html")
 
-class ProfileView(LoginRequiredMixin, DetailView):
+
+class ProfileView(TemplateView):
     model = Profile
     template_name = "profiles/profile.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfileView, self).get_context_data(**kwargs)
+        context["profile"] = Profile.objects.get(user=self.request.user)
+        return context
 
 class LogoutView(LoginRequiredMixin, TemplateView):
     def get(self, request, *args, **kwargs):

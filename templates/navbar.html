@@ -16,7 +16,7 @@
             <div class="text-end">
                 {% if user.is_authenticated %}
                     <button type="button" class="btn btn-outline-light me-2"
-                            onclick="location.href='{% url "profile" user.profile.id %}'">
+                            onclick="location.href='{% url "profile" user.username %}'">
                         {{ user.username }}
                     </button>
                     <button type="button" class="btn btn-warning"
