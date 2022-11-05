@@ -149,6 +149,7 @@ class ProfileView(TemplateView):
         context["profile"] = Profile.objects.get(user=user)
         return context
 
+
 class LogoutView(LoginRequiredMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         logout(request)
