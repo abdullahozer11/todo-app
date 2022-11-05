@@ -4,7 +4,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
-from django.http import HttpResponseRedirect
+from django.db import IntegrityError
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DeleteView, CreateView, UpdateView, TemplateView
@@ -34,6 +35,7 @@ class ItemListView(LoginRequiredMixin, ListView):
         context["todo_list"] = ToDoList.objects.get(id=self.kwargs["pk"])
         return context
 
+
 class ListAddView(LoginRequiredMixin, CreateView):
     form_class = ListForm
     template_name = "todo_app/list-add.html"
@@ -41,7 +43,10 @@ class ListAddView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
-        return super().form_valid(form)
+        try:
+            return super(ListAddView, self).form_valid(form)
+        except IntegrityError:
+            return HttpResponse("ERROR: List with this name already exists!")
 
 
 class ItemAddView(LoginRequiredMixin, CreateView):
