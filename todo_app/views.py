@@ -48,9 +48,13 @@ class ItemAddView(LoginRequiredMixin, CreateView):
     form_class = ItemForm
     template_name = "todo_app/item-add.html"
 
+    def dispatch(self, request, *args, **kwargs):
+        self.todo_list = ToDoList.objects.get(id=self.kwargs["list_id"])
+        return super(ItemAddView, self).dispatch(request, *args, **kwargs)
+
     def get_context_data(self):
         context = super(ItemAddView, self).get_context_data()
-        context["title"] = ToDoList.objects.get(id=self.kwargs["list_id"]).title
+        context["title"] = self.todo_list.title
         return context
 
     def get_success_url(self):
@@ -58,8 +62,14 @@ class ItemAddView(LoginRequiredMixin, CreateView):
 
     def get_initial(self):
         initial = super(ItemAddView, self).get_initial()
-        initial["todo_list"] = ToDoList.objects.get(pk=self.kwargs["list_id"])
+        initial["todo_list"] = self.todo_list
         return initial
+
+    def form_valid(self, form):
+        model_instance = form.save(commit=False)
+        model_instance.todo_list = self.todo_list
+        model_instance.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class ItemUpdateView(LoginRequiredMixin, UpdateView):
