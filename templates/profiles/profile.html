@@ -1,9 +1,10 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
     <div class="card">
         <h2>{{ profile.user.username }}</h2>
-        <img src="{{ profile.avatar.url }}"
+        <img src="{% media 'default.jpg' %}"
              alt="My avatar"
              width="200"
              height="200">

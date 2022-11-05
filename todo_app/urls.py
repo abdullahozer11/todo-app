@@ -20,5 +20,3 @@ urlpatterns = [
     path("signup/", SignUpView.as_view(), name="signup"),
     path("profile/<username>", ProfileView.as_view(), name="profile"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-if not settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

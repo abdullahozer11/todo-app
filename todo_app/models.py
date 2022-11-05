@@ -33,7 +33,6 @@ class ToDoItem(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=CASCADE, blank=True, null=True)
-    avatar = models.ImageField(default="default.jpg", upload_to="profile_photos")
     bio = models.TextField(default="", blank=True, null=True)
 
     def __str__(self):
