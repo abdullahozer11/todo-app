@@ -32,9 +32,9 @@ class ToDoListTest(TestCase):
         self.assertEqual(obj.__str__(), obj.title)
 
     def test_todolist_with_same_name(self):
-        obj = self.create_todolist()
+        self.create_todolist()
         try:
-            obj2 = self.create_todolist()
+            self.create_todolist()
         except IntegrityError:
             return
         raise IntegrityError("Could create two lists with same name")
